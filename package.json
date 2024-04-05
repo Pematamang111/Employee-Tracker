@@ -6,12 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev":"nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "author": "Pema Sherpa",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
+    "inquirer": "^8.2.4",
     "pg": "^8.11.5"
   },
   "devDependencies": {
