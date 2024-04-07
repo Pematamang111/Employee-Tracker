@@ -26,36 +26,36 @@ pool.connect();
 
 function question(){
 inquirer
-.prompt([{
+.prompt({
     type: 'list',
     name: 'receive',
     message: 'Select the following options:',
     choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 
         'add a role', 'add an employee', 'update an employee role']
 }
-])
+)
 .then((data) => {
 if (data.receive === 'view all departments') {
    //department names and department ids
    const dpt = 'SELECT * FROM department;';
-   pool.query(dpt), function(err, {rows}){
+   pool.query(dpt, function(err, {rows}){
     console.log(rows);
-   }
+   })
 } else if (data.receive === 'view all roles') {
     //job title, role id, the department that role belongs to, and the salary for that role
   const role = 'SELECT * FROM role;';
-  pool.query(role), function(err, {rows}){
+  pool.query(role, function(err, {rows}){
     console.log(rows);
-  }
+  })
 } else if (data.receive === 'view all employees'){
     //employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
    const employees = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.id, department.name, employee.manager_id   
                       FROM employee
                       JOIN role ON role.id = employee.role_id
                     JOIN department ON department.id = role.department_id;`
-  pool.query(employees), function(err, {rows}){
+  pool.query(employees, function(err, {rows}){
 console.log(rows);
-}
+})
 } else if (data.receive === 'add a department') {
     inquirer
     .prompt({
@@ -65,9 +65,9 @@ console.log(rows);
     }
     )
     .then((data) => {
-       pool.query('INSERT INTO department VALUES ($1)', [data.deptValue]), function(err, {rows}){
+       pool.query('INSERT INTO department VALUES ($1)', [data.deptValue], function(err, {rows}){
         console.log(rows);
-       }
+       })
     })
     .catch((err) => console.log(err));
 } else if (data.receive ==='add a role'){
@@ -90,9 +90,9 @@ console.log(rows);
     }
 )
     .then((data) => {
-        pool.query('INSERT INTO role VALUES ($1, $2, $3)', [data.title, data.salary, data.dptName]), function(err, {rows}){
+        pool.query('INSERT INTO role VALUES ($1, $2, $3)', [data.title, data.salary, data.dptName], function(err, {rows}){
             console.log(rows);
-        }
+        })
     })
     .catch((err) => console.log(err));
 }   else if (data.receive ==='add an employee'){
@@ -119,9 +119,9 @@ console.log(rows);
     }
 )
 .then((data) => {
-    pool.query('INSERT INTO employee VALUES ($1, $2, $3, $4)', [data.fName, data.lName, data.managerid, data.roleid]), function(err, {rows}){
+    pool.query('INSERT INTO employee VALUES ($1, $2, $3, $4)', [data.fName, data.lName, data.managerid, data.roleid], function(err, {rows}){
         console.log(rows);
-    }
+    })
 })
 .catch((err) => console.log(err));
 } else if (data.receive === 'update an employee role') {
@@ -149,12 +149,12 @@ console.log(rows);
 .then((data) => {
     const allEmployee = `SELECT * FROM employee WHERE employee.id =${employeeid} ;`;
     const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id =  $3';
-    pool.query(allEmployee), function(err, {rows}){
+    pool.query(allEmployee, function(err, {rows}){
         console.log(rows);
         pool.query(update), [data.firstName, data.lastName, data.role], function(err, {rows}){
             console.log(rows);
         }
-    }
+    })
 })
 .catch((err) => console.log(err));
 }
