@@ -34,7 +34,6 @@ inquirer
         'add a role', 'add an employee', 'update an employee role']
 }
 ])
-
 .then((data) => {
 if (data.receive === 'view all departments') {
    //department names and department ids
