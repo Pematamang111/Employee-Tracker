@@ -36,19 +36,19 @@ inquirer
 ])
 
 .then((data) => {
-if (data.action === 'view all departments') {
+if (data.receive === 'view all departments') {
    //department names and department ids
    const dpt = 'SELECT * FROM department;';
    pool.query(dpt), function(err, {rows}){
     console.log(rows);
    }
-} else if (data.action === 'view all roles') {
+} else if (data.receive === 'view all roles') {
     //job title, role id, the department that role belongs to, and the salary for that role
   const role = 'SELECT * FROM role;';
   pool.query(role), function(err, {rows}){
     console.log(rows);
   }
-} else if (data.action === 'view all employees'){
+} else if (data.receive === 'view all employees'){
     //employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
    const employees = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.id, department.name, employee.manager_id   
                       FROM employee
@@ -57,7 +57,7 @@ if (data.action === 'view all departments') {
   pool.query(employees), function(err, {rows}){
 console.log(rows);
 }
-} else if ('add a department') {
+} else if (data.receive === 'add a department') {
     inquirer
     .prompt({
         type: 'input',
@@ -70,7 +70,8 @@ console.log(rows);
         console.log(rows);
        }
     })
-} else if ('add a role'){
+    .catch((err) => console.log(err));
+} else if (data.receive ==='add a role'){
     inquirer
     .prompt({
         type: 'input',
@@ -94,7 +95,8 @@ console.log(rows);
             console.log(rows);
         }
     })
-}   else if ('add an employee'){
+    .catch((err) => console.log(err));
+}   else if (data.receive ==='add an employee'){
     inquirer
     .prompt({
         type: 'input',
@@ -122,14 +124,48 @@ console.log(rows);
         console.log(rows);
     }
 })
-} else if ('update an employee role') {
-   
+.catch((err) => console.log(err));
+} else if (data.receive === 'update an employee role') {
+    inquirer
+    .prompt({
+        type: 'input',
+        message: 'Enter the employee id to select an employee to update and their new role',
+        name: 'employeeid'
+    },
+    {   type: 'input',
+        name: 'firstName',
+        message: 'Enter first name'
+    },
+    {
+        type: 'input',
+        name: 'lastName',
+        message: 'Enter Last Name'
+    },
+    {
+        type: 'input',
+        name: 'role',
+        message: 'Enter the role id'
+    }
+)
+.then((data) => {
+    const allEmployee = `SELECT * FROM employee WHERE employee.id =${employeeid} ;`;
+    const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id =  $3';
+    pool.query(allEmployee), function(err, {rows}){
+        console.log(rows);
+        pool.query(update), [data.firstName, data.lastName, data.role], function(err, {rows}){
+            console.log(rows);
+        }
+    }
+})
+.catch((err) => console.log(err));
 }
 
 
 } )
-
+.catch((err) => console.log(err));
 };
+
+question();
 
 
 
