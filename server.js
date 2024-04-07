@@ -72,7 +72,7 @@ console.log(rows);
     .catch((err) => console.log(err));
 } else if (data.receive ==='add a role'){
     inquirer
-    .prompt({
+    .prompt([{
         type: 'input',
         name: 'title',
         message: 'Enter the position name/title'
@@ -87,7 +87,7 @@ console.log(rows);
         name: 'dptName',
         message: 'Enter the department name'
 
-    }
+    }]
 )
     .then((data) => {
         pool.query('INSERT INTO role VALUES ($1, $2, $3)', [data.title, data.salary, data.dptName], function(err, {rows}){
@@ -97,7 +97,7 @@ console.log(rows);
     .catch((err) => console.log(err));
 }   else if (data.receive ==='add an employee'){
     inquirer
-    .prompt({
+    .prompt([{
         type: 'input',
         name: 'fName',
         message: 'Enter the first name'
@@ -116,7 +116,7 @@ console.log(rows);
         type: 'input',
         name: 'roleid',
         message: 'Enter role'
-    }
+    }]
 )
 .then((data) => {
     pool.query('INSERT INTO employee VALUES ($1, $2, $3, $4)', [data.fName, data.lName, data.managerid, data.roleid], function(err, {rows}){
@@ -126,7 +126,7 @@ console.log(rows);
 .catch((err) => console.log(err));
 } else if (data.receive === 'update an employee role') {
     inquirer
-    .prompt({
+    .prompt([{
         type: 'input',
         message: 'Enter the employee id to select an employee to update and their new role',
         name: 'employeeid'
@@ -144,10 +144,10 @@ console.log(rows);
         type: 'input',
         name: 'role',
         message: 'Enter the role id'
-    }
+    }]
 )
 .then((data) => {
-    const allEmployee = `SELECT * FROM employee WHERE employee.id =${employeeid} ;`;
+    const allEmployee = `SELECT * FROM employee WHERE employee.id =${data.employeeid} ;`;
     const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id =  $3';
     pool.query(allEmployee, function(err, {rows}){
         console.log(rows);
