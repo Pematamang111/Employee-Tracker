@@ -1,4 +1,5 @@
 const express = require('express');
+const inquirer = require('inquirer');
 //require pool og pg to connect
 const { Pool } = require('pg');
 
@@ -18,8 +19,121 @@ const pool = new Pool(
     host: 'localhost',
     database: 'employee_db'
   },
-  console.log(`Connected to the books_db database.`)
+  console.log(`Connected to the employee_db database.`)
 )
 
 pool.connect();
 
+function question(){
+inquirer
+.prompt([{
+    type: 'list',
+    name: 'receive',
+    message: 'Select the following options:',
+    choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 
+        'add a role', 'add an employee', 'update an employee role']
+}
+])
+
+.then((data) => {
+if (data.action === 'view all departments') {
+   //department names and department ids
+   const dpt = 'SELECT * FROM department;';
+   pool.query(dpt), function(err, {rows}){
+    console.log(rows);
+   }
+} else if (data.action === 'view all roles') {
+    //job title, role id, the department that role belongs to, and the salary for that role
+  const role = 'SELECT * FROM role;';
+  pool.query(role), function(err, {rows}){
+    console.log(rows);
+  }
+} else if (data.action === 'view all employees'){
+    //employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+   const employees = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.id, department.name, employee.manager_id   
+                      FROM employee
+                      JOIN role ON role.id = employee.role_id
+                    JOIN department ON department.id = role.department_id;`
+  pool.query(employees), function(err, {rows}){
+console.log(rows);
+}
+} else if ('add a department') {
+    inquirer
+    .prompt({
+        type: 'input',
+        name: 'deptValue',
+        message:  'Enter the name of the department'
+    }
+    )
+    .then((data) => {
+       pool.query('INSERT INTO department VALUES ($1)', [data.deptValue]), function(err, {rows}){
+        console.log(rows);
+       }
+    })
+} else if ('add a role'){
+    inquirer
+    .prompt({
+        type: 'input',
+        name: 'title',
+        message: 'Enter the position name/title'
+    },
+    {
+        type: 'input',
+        name: 'salary',
+        message: 'Enter the salary'
+    },
+    {
+        type: 'input',
+        name: 'dptName',
+        message: 'Enter the department name'
+
+    }
+)
+    .then((data) => {
+        pool.query('INSERT INTO role VALUES ($1, $2, $3)', [data.title, data.salary, data.dptName]), function(err, {rows}){
+            console.log(rows);
+        }
+    })
+}   else if ('add an employee'){
+    inquirer
+    .prompt({
+        type: 'input',
+        name: 'fName',
+        message: 'Enter the first name'
+    },
+    {
+        type: 'input',
+        name: 'lname',
+        message: 'Enter the last name'
+    },
+    {
+        type: 'input',
+        name: 'managerid',
+        message: 'Enter manager id'
+    },
+    {
+        type: 'input',
+        name: 'roleid',
+        message: 'Enter role'
+    }
+)
+.then((data) => {
+    pool.query('INSERT INTO employee VALUES ($1, $2, $3, $4)', [data.fName, data.lName, data.managerid, data.roleid]), function(err, {rows}){
+        console.log(rows);
+    }
+})
+} else if ('update an employee role') {
+   
+}
+
+
+} )
+
+};
+
+
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+  
