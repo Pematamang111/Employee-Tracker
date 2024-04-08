@@ -93,7 +93,7 @@ console.table(rows);
     }]
 )
     .then((data) => {
-        pool.query('INSERT INTO role VALUES ($1, $2, $3) RETURNING title, salary, department_id;', [data.title, data.salary, data.dptName], function(err, {rows}){
+        pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3) RETURNING id, title, salary, department_id;', [data.title, data.salary, data.dptName], function(err, {rows}){
             console.table(rows);
         })
     })
@@ -122,7 +122,7 @@ console.table(rows);
     }]
 )
 .then((data) => {
-    pool.query('INSERT INTO employee VALUES ($1, $2, $3, $4) RETURNING first_name, last_name, manager_id, role_id;', [data.fName, data.lName, data.managerid, data.roleid], function(err, {rows}){
+    pool.query('INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ($1, $2, $3, $4) RETURNING id, first_name, last_name, manager_id, role_id;', [data.fName, data.lName, data.managerid, data.roleid], function(err, {rows}){
         console.table(rows);
     })
 })
@@ -150,13 +150,13 @@ console.table(rows);
     }]
 )
 .then((data) => {
-    const allEmployee = `SELECT * FROM employee WHERE employee.id =${data.employeeid} ;`;
-    const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id =  $3';
-    pool.query(allEmployee, function(err, {rows}){
+     const allEmployee = `SELECT * FROM employee WHERE employee.id =${data.employeeid} ;`;
+     const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id = $3 WHERE id = $4';
+     pool.query(allEmployee,  function(err, {rows}){
         console.table(rows);
-        pool.query(update), [data.firstName, data.lastName, data.role], function(err, {rows}){
+        pool.query(update, [data.firstName, data.lastName, data.role], function(err, {rows}){
             console.table(rows);
-        }
+        })
     })
 })
 .catch((err) => console.log(err));
