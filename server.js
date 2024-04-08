@@ -55,7 +55,7 @@ if (data.receive === 'view all departments') {
                     JOIN department ON department.id = role.department_id;`
   pool.query(employees, function(err, {rows}){
 console.table(rows);
-})
+})// to add a department
 } else if (data.receive === 'add a department') {
     inquirer
     .prompt({
@@ -73,7 +73,7 @@ console.table(rows);
 
     })
     .catch((err) => console.log(err));
-} else if (data.receive ==='add a role'){
+} else if (data.receive ==='add a role'){//to add a role
     inquirer
     .prompt([{
         type: 'input',
@@ -98,7 +98,7 @@ console.table(rows);
         })
     })
     .catch((err) => console.log(err));
-}   else if (data.receive ==='add an employee'){
+}   else if (data.receive ==='add an employee'){// to add an employee
     inquirer
     .prompt([{
         type: 'input',
@@ -127,7 +127,7 @@ console.table(rows);
     })
 })
 .catch((err) => console.log(err));
-} else if (data.receive === 'update an employee role') {
+} else if (data.receive === 'update an employee role') {// updating the employee role
     inquirer
     .prompt([{
         type: 'input',
