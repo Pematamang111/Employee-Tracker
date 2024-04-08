@@ -22,7 +22,7 @@ const pool = new Pool(
   console.log(`Connected to the employee_db database.`)
 )
 
-//pool.connect();
+pool.connect();
 
 function question(){
 inquirer
@@ -65,9 +65,11 @@ console.table(rows);
     }
     )
     .then((data) => {
-       pool.query('INSERT INTO department VALUES ($1);', [data.deptValue], function(err, {rows}){
-        console.table(rows);
-       })
+       pool.query('INSERT INTO department (name) VALUES ($1) RETURNING id, name;', [data.deptValue], function(err, { rows }){
+         console.log(rows);
+        })
+
+
     })
     .catch((err) => console.log(err));
 } else if (data.receive ==='add a role'){
