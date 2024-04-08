@@ -122,7 +122,7 @@ console.table(rows);
     }]
 )
 .then((data) => {
-    pool.query('INSERT INTO employee VALUES ($1, $2, $3, $4)', [data.fName, data.lName, data.managerid, data.roleid], function(err, {rows}){
+    pool.query('INSERT INTO employee VALUES ($1, $2, $3, $4) RETURNING first_name, last_name, manager_id, role_id;', [data.fName, data.lName, data.managerid, data.roleid], function(err, {rows}){
         console.table(rows);
     })
 })
