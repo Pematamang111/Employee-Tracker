@@ -65,8 +65,9 @@ console.table(rows);
     }
     )
     .then((data) => {
-       pool.query('INSERT INTO department (name) VALUES ($1) RETURNING id, name;', [data.deptValue], function(err, { rows }){
+       pool.query(`INSERT INTO department (name) VALUES ($1) RETURNING id, name;`, [data.deptValue], function(err, { rows }){
          console.log(rows);
+         console.table(rows);
         })
 
 
@@ -92,7 +93,7 @@ console.table(rows);
     }]
 )
     .then((data) => {
-        pool.query('INSERT INTO role VALUES ($1, $2, $3)', [data.title, data.salary, data.dptName], function(err, {rows}){
+        pool.query('INSERT INTO role VALUES ($1, $2, $3) RETURNING title, salary, department_id;', [data.title, data.salary, data.dptName], function(err, {rows}){
             console.table(rows);
         })
     })
