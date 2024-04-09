@@ -40,12 +40,16 @@ if (data.receive === 'view all departments') {
    const dpt = 'SELECT * FROM department;';
    pool.query(dpt, function(err, {rows}){
     console.table(rows);
+
+
    })
 } else if (data.receive === 'view all roles') {
     //job title, role id, the department that role belongs to, and the salary for that role
   const role = 'SELECT * FROM role;';
   pool.query(role, function(err, {rows}){
     console.table(rows);
+
+
   })
 } else if (data.receive === 'view all employees'){
     //employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
@@ -55,6 +59,8 @@ if (data.receive === 'view all departments') {
                     JOIN department ON department.id = role.department_id;`
   pool.query(employees, function(err, {rows}){
 console.table(rows);
+
+
 })// to add a department
 } else if (data.receive === 'add a department') {
     inquirer
@@ -73,6 +79,8 @@ console.table(rows);
 
     })
     .catch((err) => console.log(err));
+
+
 } else if (data.receive ==='add a role'){//to add a role
     inquirer
     .prompt([{
@@ -88,7 +96,7 @@ console.table(rows);
     {
         type: 'input',
         name: 'dptName',
-        message: 'Enter the department name'
+        message: 'Enter the department id'
 
     }]
 )
@@ -98,6 +106,8 @@ console.table(rows);
         })
     })
     .catch((err) => console.log(err));
+
+
 }   else if (data.receive ==='add an employee'){// to add an employee
     inquirer
     .prompt([{
@@ -118,7 +128,7 @@ console.table(rows);
     {
         type: 'input',
         name: 'roleid',
-        message: 'Enter role'
+        message: 'Enter role id'
     }]
 )
 .then((data) => {
@@ -134,21 +144,14 @@ console.table(rows);
     })
 })
 .catch((err) => console.log(err));
+
+
 } else if (data.receive === 'update an employee role') {// updating the employee role
     inquirer
     .prompt([{
         type: 'input',
         message: 'Enter the employee id to select an employee to update and their new role',
         name: 'employeeid'
-    },
-    {   type: 'input',
-        name: 'firstName',
-        message: 'Enter first name'
-    },
-    {
-        type: 'input',
-        name: 'lastName',
-        message: 'Enter Last Name'
     },
     {
         type: 'input',
@@ -158,10 +161,10 @@ console.table(rows);
 )
 .then((data) => {
      const allEmployee = `SELECT * FROM employee WHERE employee.id =${data.employeeid} ;`;
-     const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id = $3 WHERE employee.id = $4';
+     const update = 'UPDATE employee SET role_id = $1 WHERE employee.id = $2';
      pool.query(allEmployee,  function(err, {rows}){
         console.table(rows);
-        pool.query(update, [data.firstName, data.lastName, data.role, data.employeeid], function(err, {rows}){
+        pool.query(update, [data.role, data.employeeid], function(err, {rows}){
             console.table(rows);
         })
     })
