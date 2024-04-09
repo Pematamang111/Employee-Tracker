@@ -107,7 +107,7 @@ console.table(rows);
     },
     {
         type: 'input',
-        name: 'lname',
+        name: 'lName',
         message: 'Enter the last name'
     },
     {
@@ -122,8 +122,15 @@ console.table(rows);
     }]
 )
 .then((data) => {
-    pool.query('INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ($1, $2, $3, $4) RETURNING id, first_name, last_name, manager_id, role_id;', [data.fName, data.lName, data.managerid, data.roleid], function(err, {rows}){
-        console.table(rows);
+    pool.query('INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ($1, $2, $3, $4) RETURNING id, first_name, last_name, manager_id, role_id;', [data.fName, data.lName, data.managerid, data.roleid], function(err, result){
+        
+        if (err) {
+            console.error("Error executing query:");
+            return; // Exit the function if there's an error
+          }
+          const { rows } = result; // Destructure rows safely after checking for an error
+          console.table(rows);
+
     })
 })
 .catch((err) => console.log(err));
@@ -151,10 +158,10 @@ console.table(rows);
 )
 .then((data) => {
      const allEmployee = `SELECT * FROM employee WHERE employee.id =${data.employeeid} ;`;
-     const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id = $3 WHERE id = $4';
+     const update = 'UPDATE employee SET first_name = $1, last_name = $2, role_id = $3 WHERE employee.id = $4';
      pool.query(allEmployee,  function(err, {rows}){
         console.table(rows);
-        pool.query(update, [data.firstName, data.lastName, data.role], function(err, {rows}){
+        pool.query(update, [data.firstName, data.lastName, data.role, data.employeeid], function(err, {rows}){
             console.table(rows);
         })
     })
