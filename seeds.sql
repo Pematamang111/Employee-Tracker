@@ -1,3 +1,4 @@
+--inserting the values in tables--
 INSERT INTO department (name)
 VALUES ('electronic');
 
